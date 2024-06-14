@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>GravissCap Récap</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-gauge@3.0.1"></script>
     <style>
@@ -17,6 +17,11 @@
             display: flex;
             flex-wrap: wrap;
             padding: 20px;
+        }
+        .header {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
         }
         .left-column {
             flex: 2;
@@ -42,6 +47,8 @@
             position: relative;
             height: 400px;
             width: 100%;
+            margin: 0;
+            padding: 0;
         }
         .small-card-container {
             display: flex;
@@ -54,7 +61,6 @@
             justify-content: center;
             height: 200px;
             margin: 0 10px;
-            background-color: #f5f7fa; /* Couleur de fond par défaut */
         }
         .small-card:first-child {
             margin-left: 0;
@@ -79,10 +85,12 @@
 </head>
 <body>
     <div class="dashboard">
-        <h1>Welcome to the Dashboard</h1> <!-- Nouveau titre ajouté ici -->
+        <div class="header">
+            <h1>GravissCap Récap</h1>
+        </div>
         <div class="left-column">
             <div class="card">
-                <h3>Overall Progress</h3>
+                <h3>Progrès Global</h3>
                 <div class="chart-container">
                     <canvas id="mainChart"></canvas>
                 </div>
@@ -90,40 +98,40 @@
             <div class="small-card-container">
                 <div class="card small-card" style="background-color: #ffce66;">
                     <div class="content">
-                        <h4>Physical Energy Average</h4>
+                        <h4>Moyenne Énergie Physique</h4>
                         <canvas id="physicalEnergyAvgGauge"></canvas>
                     </div>
                 </div>
                 <div class="card small-card" style="background-color: #F9ab40;">
                     <div class="content">
-                        <h4>Mental Energy Average</h4>
+                        <h4>Moyenne Énergie Mentale</h4>
                         <canvas id="mentalEnergyAvgGauge"></canvas>
                     </div>
                 </div>
                 <div class="card small-card" style="background-color: #a9e5d5;">
                     <div class="content">
-                        <h4>Emotional Energy Average</h4>
+                        <h4>Moyenne Énergie Émotionnelle</h4>
                         <canvas id="emotionalEnergyAvgGauge"></canvas>
                     </div>
                 </div>
             </div>
         </div>
         <div class="right-column">
-            <div class="card trend-card" style="background-color: #44455b;">
+            <div class="card trend-card" style="background-color: #ffce66;">
                 <div class="content">
-                    <h4>Physical Energy Trend</h4>
+                    <h4>Tendance Énergie Physique</h4>
                     <p id="physicalEnergyTrend"></p>
                 </div>
             </div>
-            <div class="card trend-card" style="background-color: #44455b;">
+            <div class="card trend-card" style="background-color: #F9ab40;">
                 <div class="content">
-                    <h4>Mental Energy Trend</h4>
+                    <h4>Tendance Énergie Mentale</h4>
                     <p id="mentalEnergyTrend"></p>
                 </div>
             </div>
-            <div class="card trend-card" style="background-color: #44455b;">
+            <div class="card trend-card" style="background-color: #a9e5d5;">
                 <div class="content">
-                    <h4>Emotional Energy Trend</h4>
+                    <h4>Tendance Énergie Émotionnelle</h4>
                     <p id="emotionalEnergyTrend"></p>
                 </div>
             </div>
@@ -148,10 +156,10 @@
         const mainChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
                 datasets: [
                     {
-                        label: 'Physical Energy',
+                        label: 'Énergie Physique',
                         data: [12, 19, 11, 18, 14, 16, 10],
                         backgroundColor: gradient1,
                         borderColor: 'rgba(255, 206, 102, 1)',
@@ -162,7 +170,7 @@
                         pointHoverRadius: 5,
                     },
                     {
-                        label: 'Mental Energy',
+                        label: 'Énergie Mentale',
                         data: [14, 12, 15, 13, 18, 17, 16],
                         backgroundColor: gradient2,
                         borderColor: 'rgba(249, 171, 64, 1)',
@@ -173,7 +181,7 @@
                         pointHoverRadius: 5,
                     },
                     {
-                        label: 'Emotional Energy',
+                        label: 'Énergie Émotionnelle',
                         data: [20, 22, 19, 21, 25, 23, 24],
                         backgroundColor: gradient3,
                         borderColor: 'rgba(169, 229, 213, 1)',
@@ -187,6 +195,7 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     x: { grid: { display: false } },
                     y: {
@@ -216,15 +225,15 @@
             return trend;
         };
 
-        const displayTrend = (elementId, trend) => {
+        const displayTrend = (elementId, trend, color) => {
             const element = document.getElementById(elementId);
             element.textContent = trend;
-            element.style.color = trend >= 0 ? 'blue' : 'red';
+            element.style.color = trend >= 0 ? color : 'red';
         };
 
-        displayTrend('physicalEnergyTrend', calculateTrend(physicalEnergyData));
-        displayTrend('mentalEnergyTrend', calculateTrend(mentalEnergyData));
-        displayTrend('emotionalEnergyTrend', calculateTrend(emotionalEnergyData));
+        displayTrend('physicalEnergyTrend', calculateTrend(physicalEnergyData), 'rgba(85, 85, 85, 1)');
+        displayTrend('mentalEnergyTrend', calculateTrend(mentalEnergyData), 'rgba(85, 85, 85, 1)');
+        displayTrend('emotionalEnergyTrend', calculateTrend(emotionalEnergyData), 'rgba(85, 85, 85, 1)');
 
         // Create gauge charts for averages
         const createGaugeChart = (ctx, value, color) => {
