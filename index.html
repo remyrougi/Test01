@@ -54,6 +54,7 @@
             justify-content: center;
             height: 200px;
             margin: 0 10px;
+            background-color: #f5f7fa; /* Couleur de fond par défaut */
         }
         .small-card:first-child {
             margin-left: 0;
@@ -78,6 +79,7 @@
 </head>
 <body>
     <div class="dashboard">
+        <h1>Welcome to the Dashboard</h1> <!-- Nouveau titre ajouté ici -->
         <div class="left-column">
             <div class="card">
                 <h3>Overall Progress</h3>
@@ -86,43 +88,43 @@
                 </div>
             </div>
             <div class="small-card-container">
-                <div class="card small-card">
+                <div class="card small-card" style="background-color: #ffce66;">
                     <div class="content">
-                        <h4>Financial Average</h4>
-                        <canvas id="financialAvgGauge"></canvas>
+                        <h4>Physical Energy Average</h4>
+                        <canvas id="physicalEnergyAvgGauge"></canvas>
                     </div>
                 </div>
-                <div class="card small-card">
+                <div class="card small-card" style="background-color: #F9ab40;">
                     <div class="content">
-                        <h4>Training Average</h4>
-                        <canvas id="trainingAvgGauge"></canvas>
+                        <h4>Mental Energy Average</h4>
+                        <canvas id="mentalEnergyAvgGauge"></canvas>
                     </div>
                 </div>
-                <div class="card small-card">
+                <div class="card small-card" style="background-color: #a9e5d5;">
                     <div class="content">
-                        <h4>Performance Average</h4>
-                        <canvas id="performanceAvgGauge"></canvas>
+                        <h4>Emotional Energy Average</h4>
+                        <canvas id="emotionalEnergyAvgGauge"></canvas>
                     </div>
                 </div>
             </div>
         </div>
         <div class="right-column">
-            <div class="card trend-card">
+            <div class="card trend-card" style="background-color: #44455b;">
                 <div class="content">
-                    <h4>Financial Trend</h4>
-                    <p id="financialTrend"></p>
+                    <h4>Physical Energy Trend</h4>
+                    <p id="physicalEnergyTrend"></p>
                 </div>
             </div>
-            <div class="card trend-card">
+            <div class="card trend-card" style="background-color: #44455b;">
                 <div class="content">
-                    <h4>Training Trend</h4>
-                    <p id="trainingTrend"></p>
+                    <h4>Mental Energy Trend</h4>
+                    <p id="mentalEnergyTrend"></p>
                 </div>
             </div>
-            <div class="card trend-card">
+            <div class="card trend-card" style="background-color: #44455b;">
                 <div class="content">
-                    <h4>Performance Trend</h4>
-                    <p id="performanceTrend"></p>
+                    <h4>Emotional Energy Trend</h4>
+                    <p id="emotionalEnergyTrend"></p>
                 </div>
             </div>
         </div>
@@ -132,16 +134,16 @@
         const ctx = document.getElementById('mainChart').getContext('2d');
 
         const gradient1 = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient1.addColorStop(0, 'rgba(155, 89, 182, 0.5)');
-        gradient1.addColorStop(1, 'rgba(155, 89, 182, 0)');
+        gradient1.addColorStop(0, 'rgba(255, 206, 102, 0.5)');
+        gradient1.addColorStop(1, 'rgba(255, 206, 102, 0)');
 
         const gradient2 = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient2.addColorStop(0, 'rgba(52, 152, 219, 0.5)');
-        gradient2.addColorStop(1, 'rgba(52, 152, 219, 0)');
+        gradient2.addColorStop(0, 'rgba(249, 171, 64, 0.5)');
+        gradient2.addColorStop(1, 'rgba(249, 171, 64, 0)');
 
         const gradient3 = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient3.addColorStop(0, 'rgba(231, 76, 60, 0.5)');
-        gradient3.addColorStop(1, 'rgba(231, 76, 60, 0)');
+        gradient3.addColorStop(0, 'rgba(169, 229, 213, 0.5)');
+        gradient3.addColorStop(1, 'rgba(169, 229, 213, 0)');
 
         const mainChart = new Chart(ctx, {
             type: 'line',
@@ -149,10 +151,10 @@
                 labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                 datasets: [
                     {
-                        label: 'Financial Data Progress',
+                        label: 'Physical Energy',
                         data: [12, 19, 11, 18, 14, 16, 10],
                         backgroundColor: gradient1,
-                        borderColor: 'rgba(155, 89, 182, 1)',
+                        borderColor: 'rgba(255, 206, 102, 1)',
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
@@ -160,10 +162,10 @@
                         pointHoverRadius: 5,
                     },
                     {
-                        label: 'Training Progress',
+                        label: 'Mental Energy',
                         data: [14, 12, 15, 13, 18, 17, 16],
                         backgroundColor: gradient2,
-                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderColor: 'rgba(249, 171, 64, 1)',
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
@@ -171,10 +173,10 @@
                         pointHoverRadius: 5,
                     },
                     {
-                        label: 'Performance Metrics',
+                        label: 'Emotional Energy',
                         data: [20, 22, 19, 21, 25, 23, 24],
                         backgroundColor: gradient3,
-                        borderColor: 'rgba(231, 76, 60, 1)',
+                        borderColor: 'rgba(169, 229, 213, 1)',
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
@@ -199,9 +201,9 @@
         });
 
         // Calculate and display averages
-        const financialData = [12, 19, 11, 18, 14, 16, 10];
-        const trainingData = [14, 12, 15, 13, 18, 17, 16];
-        const performanceData = [20, 22, 19, 21, 25, 23, 24];
+        const physicalEnergyData = [12, 19, 11, 18, 14, 16, 10];
+        const mentalEnergyData = [14, 12, 15, 13, 18, 17, 16];
+        const emotionalEnergyData = [20, 22, 19, 21, 25, 23, 24];
 
         const calculateAverage = (data) => {
             const sum = data.reduce((a, b) => a + b, 0);
@@ -220,9 +222,9 @@
             element.style.color = trend >= 0 ? 'blue' : 'red';
         };
 
-        displayTrend('financialTrend', calculateTrend(financialData));
-        displayTrend('trainingTrend', calculateTrend(trainingData));
-        displayTrend('performanceTrend', calculateTrend(performanceData));
+        displayTrend('physicalEnergyTrend', calculateTrend(physicalEnergyData));
+        displayTrend('mentalEnergyTrend', calculateTrend(mentalEnergyData));
+        displayTrend('emotionalEnergyTrend', calculateTrend(emotionalEnergyData));
 
         // Create gauge charts for averages
         const createGaugeChart = (ctx, value, color) => {
@@ -259,23 +261,14 @@
             });
         };
 
-        // Ensure the canvas elements exist
-        const financialAvgGaugeElement = document.getElementById('financialAvgGauge');
-        const trainingAvgGaugeElement = document.getElementById('trainingAvgGauge');
-        const performanceAvgGaugeElement = document.getElementById('performanceAvgGauge');
+        const physicalEnergyAvgGauge = document.getElementById('physicalEnergyAvgGauge').getContext('2d');
+        createGaugeChart(physicalEnergyAvgGauge, parseFloat(calculateAverage(physicalEnergyData)), 'rgba(255, 206, 102, 1)');
 
-        if (financialAvgGaugeElement && trainingAvgGaugeElement && performanceAvgGaugeElement) {
-            const financialAvgGauge = financialAvgGaugeElement.getContext('2d');
-            createGaugeChart(financialAvgGauge, parseFloat(calculateAverage(financialData)), 'rgba(155, 89, 182, 1)');
+        const mentalEnergyAvgGauge = document.getElementById('mentalEnergyAvgGauge').getContext('2d');
+        createGaugeChart(mentalEnergyAvgGauge, parseFloat(calculateAverage(mentalEnergyData)), 'rgba(249, 171, 64, 1)');
 
-            const trainingAvgGauge = trainingAvgGaugeElement.getContext('2d');
-            createGaugeChart(trainingAvgGauge, parseFloat(calculateAverage(trainingData)), 'rgba(52, 152, 219, 1)');
-
-            const performanceAvgGauge = performanceAvgGaugeElement.getContext('2d');
-            createGaugeChart(performanceAvgGauge, parseFloat(calculateAverage(performanceData)), 'rgba(231, 76, 60, 1)');
-        } else {
-            console.error('Canvas elements for gauge charts not found');
-        }
+        const emotionalEnergyAvgGauge = document.getElementById('emotionalEnergyAvgGauge').getContext('2d');
+        createGaugeChart(emotionalEnergyAvgGauge, parseFloat(calculateAverage(emotionalEnergyData)), 'rgba(169, 229, 213, 1)');
     </script>
 </body>
 </html>
