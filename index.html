@@ -3,35 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chart.js Example</title>
+    <title>Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-gauge@3.0.1"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        .left-column {
+            flex: 2;
+            margin: 10px;
+        }
+        .right-column {
+            flex: 1;
+            margin: 10px;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .card h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        .small-card-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .small-card {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            margin: 0 10px;
+        }
+        .small-card:first-child {
+            margin-left: 0;
+        }
+        .small-card:last-child {
+            margin-right: 0;
+        }
+        .small-card .content {
+            text-align: center;
+            width: 100%;
+        }
+        .small-card .content h4 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+        .trend-card .content p {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <div style="width: 75%; margin: auto; padding-top: 50px;">
-        <canvas id="myChart"></canvas>
+    <div class="dashboard">
+        <div class="left-column">
+            <div class="card">
+                <h3>Overall Progress</h3>
+                <div class="chart-container">
+                    <canvas id="mainChart"></canvas>
+                </div>
+            </div>
+            <div class="small-card-container">
+                <div class="card small-card">
+                    <div class="content">
+                        <h4>Financial Average</h4>
+                        <canvas id="financialAvgGauge"></canvas>
+                    </div>
+                </div>
+                <div class="card small-card">
+                    <div class="content">
+                        <h4>Training Average</h4>
+                        <canvas id="trainingAvgGauge"></canvas>
+                    </div>
+                </div>
+                <div class="card small-card">
+                    <div class="content">
+                        <h4>Performance Average</h4>
+                        <canvas id="performanceAvgGauge"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right-column">
+            <div class="card trend-card">
+                <div class="content">
+                    <h4>Financial Trend</h4>
+                    <p id="financialTrend"></p>
+                </div>
+            </div>
+            <div class="card trend-card">
+                <div class="content">
+                    <h4>Training Trend</h4>
+                    <p id="trainingTrend"></p>
+                </div>
+            </div>
+            <div class="card trend-card">
+                <div class="content">
+                    <h4>Performance Trend</h4>
+                    <p id="performanceTrend"></p>
+                </div>
+            </div>
+        </div>
     </div>
     <script>
-        const ctx = document.getElementById('myChart').getContext('2d');
-        const myChart = new Chart(ctx, {
-            type: 'bar', // Type de graphique : 'bar', 'line', 'pie', etc.
+        // Create gradient for main chart
+        const ctx = document.getElementById('mainChart').getContext('2d');
+
+        const gradient1 = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient1.addColorStop(0, 'rgba(155, 89, 182, 0.5)');
+        gradient1.addColorStop(1, 'rgba(155, 89, 182, 0)');
+
+        const gradient2 = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient2.addColorStop(0, 'rgba(52, 152, 219, 0.5)');
+        gradient2.addColorStop(1, 'rgba(52, 152, 219, 0)');
+
+        const gradient3 = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient3.addColorStop(0, 'rgba(231, 76, 60, 0.5)');
+        gradient3.addColorStop(1, 'rgba(231, 76, 60, 0)');
+
+        const mainChart = new Chart(ctx, {
+            type: 'line',
             data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [{
-                    label: 'Dataset 1',
-                    data: [12, 19, 3, 5, 2, 3, 7],
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [
+                    {
+                        label: 'Financial Data Progress',
+                        data: [12, 19, 11, 18, 14, 16, 10],
+                        backgroundColor: gradient1,
+                        borderColor: 'rgba(155, 89, 182, 1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 5,
+                    },
+                    {
+                        label: 'Training Progress',
+                        data: [14, 12, 15, 13, 18, 17, 16],
+                        backgroundColor: gradient2,
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 5,
+                    },
+                    {
+                        label: 'Performance Metrics',
+                        data: [20, 22, 19, 21, 25, 23, 24],
+                        backgroundColor: gradient3,
+                        borderColor: 'rgba(231, 76, 60, 1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 5,
+                    }
+                ]
             },
             options: {
+                responsive: true,
                 scales: {
+                    x: { grid: { display: false } },
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        grid: { display: true, color: 'rgba(200, 200, 200, 0.1)' }
                     }
+                },
+                plugins: {
+                    legend: { display: true }
                 }
             }
         });
+
+        // Calculate and display averages
+        const financialData = [12, 19, 11, 18, 14, 16, 10];
+        const trainingData = [14, 12, 15, 13, 18, 17, 16];
+        const performanceData = [20, 22, 19, 21, 25, 23, 24];
+
+        const calculateAverage = (data) => {
+            const sum = data.reduce((a, b) => a + b, 0);
+            return (sum / data.length).toFixed(2);
+        };
+
+        // Calculate and display trends
+        const calculateTrend = (data) => {
+            const trend = (data[data.length - 1] - data[0]).toFixed(2);
+            return trend;
+        };
+
+        const displayTrend = (elementId, trend) => {
+            const element = document.getElementById(elementId);
+            element.textContent = trend;
+            element.style.color = trend >= 0 ? 'blue' : 'red';
+        };
+
+        displayTrend('financialTrend', calculateTrend(financialData));
+        displayTrend('trainingTrend', calculateTrend(trainingData));
+        displayTrend('performanceTrend', calculateTrend(performanceData));
+
+        // Create gauge charts for averages
+        const createGaugeChart = (ctx, value, color) => {
+            return new Chart(ctx, {
+                type: 'gauge',
+                data: {
+                    datasets: [{
+                        data: [value, 25 - value],
+                        value: value,
+                        backgroundColor: [color, 'rgba(200, 200, 200, 0.2)'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    needle: {
+                        radiusPercentage: 2,
+                        widthPercentage: 3.2,
+                        lengthPercentage: 80,
+                        color: color
+                    },
+                    valueLabel: {
+                        formatter: (value) => {
+                            return value.toFixed(1);
+                        },
+                        display: true
+                    },
+                    plugins: {
+                        datalabels: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        };
+
+        // Ensure the canvas elements exist
+        const financialAvgGaugeElement = document.getElementById('financialAvgGauge');
+        const trainingAvgGaugeElement = document.getElementById('trainingAvgGauge');
+        const performanceAvgGaugeElement = document.getElementById('performanceAvgGauge');
+
+        if (financialAvgGaugeElement && trainingAvgGaugeElement && performanceAvgGaugeElement) {
+            const financialAvgGauge = financialAvgGaugeElement.getContext('2d');
+            createGaugeChart(financialAvgGauge, parseFloat(calculateAverage(financialData)), 'rgba(155, 89, 182, 1)');
+
+            const trainingAvgGauge = trainingAvgGaugeElement.getContext('2d');
+            createGaugeChart(trainingAvgGauge, parseFloat(calculateAverage(trainingData)), 'rgba(52, 152, 219, 1)');
+
+            const performanceAvgGauge = performanceAvgGaugeElement.getContext('2d');
+            createGaugeChart(performanceAvgGauge, parseFloat(calculateAverage(performanceData)), 'rgba(231, 76, 60, 1)');
+        } else {
+            console.error('Canvas elements for gauge charts not found');
+        }
     </script>
 </body>
 </html>
